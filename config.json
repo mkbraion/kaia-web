@@ -1,0 +1,52 @@
+{
+  "_ajuda": "Edite este arquivo para mudar o que o robo coleta. Depois rode Coletar.bat de novo.",
+  "cidade_nome": "Santa Maria - RS",
+  "city_id": 6581364,
+  "_transacao": "261 = Venda | 260 = Aluguel",
+  "transacao": 261,
+  "_filtros": "Use 0 para 'sem limite'. tipos vazio [] = todos os tipos.",
+  "preco_min": 0,
+  "preco_max": 0,
+  "quartos_min": 0,
+  "somente_com_foto": true,
+  "tipos": [],
+  "_tipos_disponiveis": {
+    "194": "Apartamento",
+    "202": "Casa",
+    "211": "Terreno",
+    "228": "Casa de Condominio",
+    "798": "Cobertura",
+    "1009": "Studio",
+    "3112": "Sobrado",
+    "20": "Sala Comercial"
+  },
+  "_fotos": "Quantas fotos baixar por imovel. O Marketplace aceita ate 20.",
+  "max_fotos": 12,
+  "_anuncio": "Seus dados, que entram no rodape de cada anuncio.",
+  "seu_nome": "Nelson Neto",
+  "seu_whatsapp": "55 55 99111-7663",
+  "seu_creci": "",
+  "_ia": "local = funciona offline, sem chave, de graca (recomendado). Se quiser texto mais criativo, use groq ou gemini e cole a chave gratuita.",
+  "provedor_ia": "local",
+  "api_key_ia": "",
+  "modelo_ia": "",
+  "_facebook": "Publicacao automatica na sua PAGINA. Use o Configurar-Facebook.bat para preencher page_id e page_token.",
+  "facebook": {
+    "ativo": true,
+    "modo_teste": false,
+    "page_id": "",
+    "page_token": "",
+    "nome_pagina": "",
+    "_horarios": "Em que horas do dia postar. O Facebook publica sozinho nesses horarios, mesmo com o PC desligado.",
+    "horarios": [
+      "09:00",
+      "13:00",
+      "19:00"
+    ],
+    "posts_por_dia": 3,
+    "_variar_tipos": "Intercala apartamento/casa/terreno para o feed nao ficar repetitivo.",
+    "variar_tipos": true,
+    "_dias_a_frente": "Quantos dias de posts deixar agendados de uma vez. Medido na pratica: a Meta recusa acima de ~28 dias.",
+    "dias_a_frente": 27
+  }
+}

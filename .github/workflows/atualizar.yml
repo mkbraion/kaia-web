@@ -1,0 +1,51 @@
+name: Atualiza dados do app
+
+on:
+  schedule:
+    - cron: "30 11 * * *"      # 08:30 no horario de Brasilia (11:30 UTC)
+  workflow_dispatch:            # permite rodar na mao pelo site
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kaia-web
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencia de criptografia
+        run: pip install cryptography
+
+      - name: Coletar imoveis da REMAX (sem fotos)
+        env:
+          KAIA_NUVEM: "1"
+        run: python kaia.py coletar
+
+      - name: Gerar dados criptografados do app
+        env:
+          KAIA_WEB_PASSWORD: ${{ secrets.KAIA_WEB_PASSWORD }}
+        run: |
+          python gerar_web.py
+          cp web/dados.enc dados.enc
+
+      - name: Publicar no app
+        run: |
+          git config user.name "KAIA Web"
+          git config user.email "actions@users.noreply.github.com"
+          git add dados.enc
+          if git diff --staged --quiet; then
+            echo "Nada mudou."
+          else
+            git commit -m "Atualiza dados do app"
+            git push
+          fi
