@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0C">
+<title>KAIA Imóveis</title>
+<style>
+:root{
+  --laranja:#FF7A18; --laranja-fraco:rgba(255,122,24,.13); --laranja-borda:rgba(255,122,24,.38);
+  --laranja-claro:#FF9A47; --glow:rgba(255,122,24,.35);
+  --bg:#0A0A0C; --card:#141210; --card2:#1D1A16;
+  --txt:#F6F3EF; --txt2:#A39B8E; --verde:#28C76F; --amarelo:#FFC24D;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--txt);
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+
+/* ---- tela de senha ---- */
+#login{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:16px;padding:28px;text-align:center;z-index:50}
+#login h1{margin:0;font-size:30px;font-weight:800}
+#login h1 span{background:linear-gradient(90deg,#FF7A18,#FFB44D);-webkit-background-clip:text;
+  background-clip:text;color:transparent}
+#login p{color:var(--txt2);font-size:14px;margin:0}
+#senha{width:100%;max-width:320px;font-size:17px;padding:14px 16px;border-radius:12px;
+  background:var(--card2);border:1px solid #2E2E42;color:var(--txt);text-align:center}
+#senha:focus{outline:none;border-color:var(--laranja);box-shadow:0 0 0 3px var(--laranja-fraco)}
+#entrar{width:100%;max-width:320px;font-size:16px;font-weight:800;padding:14px;border:none;
+  border-radius:12px;background:var(--laranja);color:#231200;cursor:pointer;
+  box-shadow:0 6px 18px var(--glow)}
+#erroLogin{color:#FF9C9C;font-size:13px;min-height:16px}
+
+/* ---- app ---- */
+#app{display:none}
+header{position:sticky;top:0;z-index:10;background:rgba(10,10,12,.96);
+  backdrop-filter:blur(12px);border-bottom:1px solid #2A2318;
+  padding:calc(10px + env(safe-area-inset-top)) 14px 10px}
+.topo{display:flex;align-items:baseline;gap:8px}
+.topo h1{margin:0;font-size:19px;font-weight:800}
+.topo h1 span{color:var(--laranja)}
+.topo .qt{color:var(--txt2);font-size:12px;margin-left:auto}
+#busca{width:100%;font-size:16px;padding:11px 13px;border-radius:11px;margin-top:9px;
+  background:var(--card2);border:1px solid #2E2E42;color:var(--txt)}
+#busca:focus{outline:none;border-color:var(--laranja)}
+.linha{display:flex;gap:7px;margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:2px}
+.linha select{flex:0 0 auto;font-size:14px;padding:9px 11px;border-radius:10px;
+  background:var(--card2);border:1px solid #2E2E42;color:var(--txt)}
+
+.lista{padding:14px 14px calc(40px + env(safe-area-inset-bottom));display:flex;
+  flex-direction:column;gap:16px;max-width:640px;margin:0 auto}
+.card{background:linear-gradient(160deg,var(--card2),var(--card));
+  border:1px solid #23233333;border-radius:16px;overflow:hidden;
+  box-shadow:0 8px 22px rgba(0,0,0,.4)}
+.fotos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+  aspect-ratio:4/3;background:#0d0d15}
+.fotos img{width:100%;height:100%;object-fit:cover;flex:0 0 100%;scroll-snap-align:center}
+.selo{position:absolute;margin:10px;padding:4px 9px;border-radius:7px;font-size:11px;
+  font-weight:800;background:rgba(0,0,0,.72);border:1px solid #ffffff2b}
+.corpo{padding:14px 15px 16px;display:flex;flex-direction:column;gap:11px}
+.preco{font-size:25px;font-weight:800;color:var(--laranja-claro);letter-spacing:-.5px}
+.ender{color:var(--txt2);font-size:13px;line-height:1.45}
+.specs{display:flex;gap:6px;flex-wrap:wrap}
+.spec{background:var(--laranja-fraco);border:1px solid var(--laranja-borda);color:var(--laranja-claro);
+  border-radius:7px;padding:4px 9px;font-size:12px;font-weight:600}
+.rotulo{color:var(--txt2);font-size:10.5px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.txt{background:#0C0C14;border:1px solid #23233A;border-radius:10px;color:var(--txt2);
+  font-size:13px;padding:11px;max-height:150px;overflow:auto;white-space:pre-wrap;line-height:1.5}
+.btns{display:flex;gap:7px;flex-wrap:wrap}
+.b{flex:1;min-width:80px;text-align:center;font-size:13px;font-weight:700;padding:11px 10px;
+  border-radius:10px;border:1px solid #2E2E42;background:var(--card2);color:var(--txt);cursor:pointer}
+.b:active{transform:scale(.97)}
+.b.ok{background:var(--verde);border-color:var(--verde);color:#04240f}
+.b.forte{background:var(--laranja);border-color:var(--laranja);color:#231200}
+.corretor{background:rgba(255,176,32,.09);border:1px dashed rgba(255,176,32,.45);
+  border-radius:10px;padding:9px 11px;font-size:13px;color:#F0D9A8;line-height:1.5}
+.cor-tag{display:block;font-size:9.5px;font-weight:800;letter-spacing:.8px;color:var(--amarelo);margin-bottom:3px}
+.corretor a{color:var(--verde);font-weight:700;text-decoration:none}
+.remax{font-size:11.5px;color:var(--txt2);text-decoration:none}
+.vazio{text-align:center;color:var(--txt2);padding:60px 20px}
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom));
+  transform:translateX(-50%) translateY(80px);background:var(--verde);color:#04240f;
+  padding:11px 20px;border-radius:11px;font-weight:800;font-size:14px;z-index:99;
+  transition:transform .22s;box-shadow:0 8px 22px #0007}
+#toast.on{transform:translateX(-50%) translateY(0)}
+.att{text-align:center;color:var(--txt2);font-size:11px;padding:0 14px 20px}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h1>KAIA <span>Imóveis</span></h1>
+  <p>Digite a senha para ver os imóveis.</p>
+  <input id="senha" type="password" inputmode="text" autocomplete="current-password"
+         placeholder="senha" enterkeyhint="go">
+  <button id="entrar">Entrar</button>
+  <div id="erroLogin"></div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="topo"><h1>KAIA <span>Imóveis</span></h1><span class="qt" id="qt"></span></div>
+    <input id="busca" type="search" placeholder="Buscar rua, bairro, código..." autocomplete="off">
+    <div class="linha">
+      <select id="fTipo"><option value="">Todos os tipos</option></select>
+      <select id="fBairro"><option value="">Todos os bairros</option></select>
+      <select id="fFaixa">
+        <option value="">Qualquer preço</option>
+        <option value="a">Até 150 mil</option>
+        <option value="b">150 a 300 mil</option>
+        <option value="c">300 a 500 mil</option>
+        <option value="d">500 mil a 1 mi</option>
+        <option value="e">Acima de 1 mi</option>
+      </select>
+      <select id="fOrdem">
+        <option value="">Ordem padrão</option>
+        <option value="pa">Preço: menor</option>
+        <option value="pd">Preço: maior</option>
+      </select>
+    </div>
+  </header>
+  <div class="lista" id="lista"></div>
+  <div class="att" id="att"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const ITER=200000;
+let DADOS=[];
+const FAIXAS={a:[0,150000],b:[150000,300000],c:[300000,500000],d:[500000,1000000],e:[1000000,null]};
+
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),1500)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')}
+function digitos(s){return String(s||'').replace(/\D/g,'')}
+function moeda(v){return v?('R$ '+Number(v).toLocaleString('pt-BR')):'a consultar'}
+
+async function decifrar(buf, senha){
+  const dados=new Uint8Array(buf);
+  const salt=dados.slice(0,16), iv=dados.slice(16,28), ct=dados.slice(28);
+  const baseKey=await crypto.subtle.importKey('raw',new TextEncoder().encode(senha),
+    'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey(
+    {name:'PBKDF2',salt,iterations:ITER,hash:'SHA-256'},baseKey,
+    {name:'AES-GCM',length:256},false,['decrypt']);
+  const plano=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,ct);
+  return JSON.parse(new TextDecoder().decode(plano));
+}
+
+async function entrar(){
+  const senha=document.getElementById('senha').value;
+  const err=document.getElementById('erroLogin');
+  if(!senha){err.textContent='Digite a senha.';return}
+  err.textContent='Abrindo...';
+  try{
+    const r=await fetch('dados.enc?t='+Date.now());
+    if(!r.ok) throw new Error('nao achei os dados');
+    const buf=await r.arrayBuffer();
+    const j=await decifrar(buf, senha);
+    DADOS=j.itens||[];
+    try{ localStorage.setItem('kaia_senha', senha) }catch(e){}
+    document.getElementById('att').textContent =
+      'Atualizado em '+new Date((j.gerado_em||0)*1000).toLocaleString('pt-BR');
+    document.getElementById('login').style.display='none';
+    document.getElementById('app').style.display='block';
+    montarFiltros(); desenhar();
+  }catch(e){
+    err.textContent='Senha incorreta ou sem internet.';
+  }
+}
+
+function montarFiltros(){
+  const tipos=new Map(), bairros=new Map();
+  DADOS.forEach(im=>{
+    if(im.tipo) tipos.set(im.tipo,(tipos.get(im.tipo)||0)+1);
+    if(im.bairro) bairros.set(im.bairro,(bairros.get(im.bairro)||0)+1);
+  });
+  const opt=(m)=>[...m.keys()].sort((a,b)=>a.localeCompare(b,'pt'))
+    .map(k=>`<option value="${esc(k)}">${esc(k)} (${m.get(k)})</option>`).join('');
+  document.getElementById('fTipo').insertAdjacentHTML('beforeend',opt(tipos));
+  document.getElementById('fBairro').insertAdjacentHTML('beforeend',opt(bairros));
+}
+
+function alvo(im){return norm([im.endereco,im.bairro,im.cidade,im.tipo,im.codigo].join(' '))}
+
+function desenhar(){
+  const busca=norm(document.getElementById('busca').value).split(/\s+/).filter(Boolean);
+  const t=document.getElementById('fTipo').value;
+  const b=document.getElementById('fBairro').value;
+  const fx=document.getElementById('fFaixa').value;
+  const ord=document.getElementById('fOrdem').value;
+
+  let lista=DADOS.filter(im=>{
+    if(t && im.tipo!==t) return false;
+    if(b && im.bairro!==b) return false;
+    if(fx){const f=FAIXAS[fx];const p=im.preco;
+      if(p==null) return false; if(p<f[0]||(f[1]&&p>=f[1])) return false;}
+    if(busca.length){const a=alvo(im); if(!busca.every(p=>a.includes(p))) return false;}
+    return true;
+  });
+  if(ord==='pa') lista.sort((x,y)=>(x.preco??1e15)-(y.preco??1e15));
+  if(ord==='pd') lista.sort((x,y)=>(y.preco??-1)-(x.preco??-1));
+
+  document.getElementById('qt').textContent=lista.length+' imóveis';
+  document.getElementById('lista').innerHTML = lista.length
+    ? lista.map(card).join('')
+    : '<div class="vazio">Nenhum imóvel com esses filtros.</div>';
+}
+
+function card(im){
+  const specs=[];
+  if(im.quartos) specs.push(im.quartos+'Q');
+  if(im.banheiros) specs.push(im.banheiros+' banh');
+  if(im.vagas) specs.push(im.vagas+' vaga'+(im.vagas>1?'s':''));
+  if(im.area) specs.push(im.area+' m²');
+  if(im.tipo) specs.push(im.tipo);
+
+  const fotos=(im.fotos||[]).slice(0,15)
+    .map(u=>`<img loading="lazy" src="${esc(u)}" alt="">`).join('')
+    || '<div style="padding:30px;color:var(--txt2)">sem fotos</div>';
+
+  let cor='';
+  const c=im.corretor;
+  if(c && (c.nome||c.telefone)){
+    const fone=digitos(c.whatsapp||c.telefone);
+    const num=fone.length>=12?fone:('55'+fone);
+    const partes=[c.nome, c.creci?('CRECI '+c.creci):'', c.imobiliaria].filter(Boolean).map(esc).join(' · ');
+    cor=`<div class="corretor"><span class="cor-tag">SÓ PARA VOCÊ · corretor na RE/MAX</span>
+      ${partes}${fone?`<br>${esc(c.whatsapp||c.telefone)} <a href="https://wa.me/${num}" target="_blank" rel="noopener">WhatsApp</a>`:''}</div>`;
+  }
+
+  return `<div class="card">
+    <div style="position:relative"><div class="fotos">${fotos}</div>
+      <span class="selo">${(im.fotos||[]).length} fotos</span></div>
+    <div class="corpo">
+      <div class="preco">${moeda(im.preco)}</div>
+      <div class="specs">${specs.map(s=>`<span class="spec">${esc(s)}</span>`).join('')}</div>
+      <div class="ender">${esc(im.endereco)}</div>
+      <div class="rotulo">Anúncio (toque para copiar)</div>
+      <div class="txt" onclick="copiar(this.dataset.t,'Descrição')" data-t="${esc(im.texto)}">${esc(im.texto)}</div>
+      <div class="btns">
+        <button class="b forte" onclick="copiar(CAMPO('${esc(im.codigo)}','texto'),'Descrição')">Copiar descrição</button>
+        <button class="b" onclick="copiar(CAMPO('${esc(im.codigo)}','ender'),'Endereço')">Endereço</button>
+      </div>
+      ${cor}
+      <a class="remax" href="${esc(im.link)}" target="_blank" rel="noopener">Ver no site da RE/MAX (cód. ${esc(im.codigo)})</a>
+    </div></div>`;
+}
+
+function CAMPO(cod,qual){const im=DADOS.find(x=>x.codigo===cod);
+  return qual==='ender'?(im.endereco||''):(im.texto||'')}
+function copiar(txt,rot){
+  (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject())
+    .then(()=>toast((rot||'Texto')+' copiado'))
+    .catch(()=>{ // fallback
+      const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);
+      t.select();try{document.execCommand('copy');toast((rot||'Texto')+' copiado')}catch(e){}
+      document.body.removeChild(t);
+    });
+}
+
+['busca','fTipo','fBairro','fFaixa','fOrdem'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',desenhar);
+});
+document.getElementById('entrar').addEventListener('click',entrar);
+document.getElementById('senha').addEventListener('keydown',e=>{if(e.key==='Enter')entrar()});
+// tenta a senha guardada (login automatico nas proximas vezes)
+window.addEventListener('load',()=>{
+  let s=null; try{ s=localStorage.getItem('kaia_senha') }catch(e){}
+  if(s){ document.getElementById('senha').value=s; entrar() }
+});
+</script>
+</body>
+</html>
